@@ -1,0 +1,99 @@
+syntax = "proto3";
+package bloqz.ibc.v1;
+
+option go_package = "github.com/bloqz/hub/x/ibc/types";
+
+// Common status enum used across different message types
+enum VerificationStatus {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_PENDING = 1;
+  STATUS_VERIFIED = 2;
+  STATUS_REJECTED = 3;
+}
+
+// Base message for all IBC packets
+message IBCPacket {
+  string source_chain = 1;
+  string destination_chain = 2;
+  string sender = 3;
+  string receiver = 4;
+  int64 timestamp = 5;
+  bytes payload = 6;
+}
+
+// User profile verification message
+message UserProfile {
+  string user_id = 1;
+  string profile_type = 2;
+  repeated Credential credentials = 3;
+  VerificationStatus status = 4;
+  int64 verification_timestamp = 5;
+  string verifier_id = 6;
+}
+
+// Credential information
+message Credential {
+  string credential_type = 1;
+  string issuer = 2;
+  bytes credential_data = 3;
+  int64 expiry_date = 4;
+}
+
+// Document verification message
+message Document {
+  string document_id = 1;
+  string document_type = 2;
+  bytes document_hash = 3;
+  map<string, string> metadata = 4;
+  VerificationStatus status = 5;
+  int64 verification_timestamp = 6;
+  string verifier_id = 7;
+}
+
+// Real-time messaging packet
+message RealTimeMessage {
+  string message_id = 1;
+  string channel_id = 2;
+  string content_type = 3;
+  bytes content = 4;
+  int64 timestamp = 5;
+  repeated string recipients = 6;
+}
+
+// Video conferencing signal
+message VideoSignal {
+  string session_id = 1;
+  string signal_type = 2;
+  bytes signal_data = 3;
+  string peer_id = 4;
+  int64 timestamp = 5;
+}
+
+// Device authentication message
+message DeviceAuth {
+  string device_id = 1;
+  string user_id = 2;
+  string auth_method = 3;
+  bytes auth_data = 4;
+  int64 timestamp = 5;
+  VerificationStatus status = 6;
+}
+
+// Service integration verification
+message ServiceVerification {
+  string service_id = 1;
+  string service_type = 2;
+  map<string, string> capabilities = 3;
+  VerificationStatus status = 4;
+  int64 verification_timestamp = 5;
+}
+
+// Transaction validation message
+message TransactionValidation {
+  string transaction_id = 1;
+  string transaction_type = 2;
+  repeated string validators = 3;
+  map<string, bytes> signatures = 4;
+  VerificationStatus status = 5;
+  int64 validation_timestamp = 6;
+}

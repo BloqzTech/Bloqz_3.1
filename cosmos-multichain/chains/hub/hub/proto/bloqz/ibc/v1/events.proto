@@ -1,0 +1,65 @@
+syntax = "proto3";
+package bloqz.ibc.v1;
+
+import "bloqz/ibc/v1/types.proto";
+
+option go_package = "github.com/bloqz/hub/x/ibc/events";
+
+// Events emitted by the IBC protocol
+
+message ProfileVerificationEvent {
+  string event_id = 1;
+  string profile_id = 2;
+  VerificationStatus status = 3;
+  int64 timestamp = 4;
+  string verifier_id = 5;
+}
+
+message DocumentVerificationEvent {
+  string event_id = 1;
+  string document_id = 2;
+  VerificationStatus status = 3;
+  int64 timestamp = 4;
+  string verifier_id = 5;
+}
+
+message MessageDeliveryEvent {
+  string event_id = 1;
+  string message_id = 2;
+  string recipient = 3;
+  bool delivered = 4;
+  int64 timestamp = 5;
+}
+
+message VideoSignalEvent {
+  string event_id = 1;
+  string session_id = 2;
+  string signal_type = 3;
+  string peer_id = 4;
+  bool acknowledged = 5;
+  int64 timestamp = 6;
+}
+
+message DeviceAuthEvent {
+  string event_id = 1;
+  string device_id = 2;
+  string user_id = 3;
+  VerificationStatus status = 4;
+  int64 timestamp = 5;
+}
+
+message ServiceVerificationEvent {
+  string event_id = 1;
+  string service_id = 2;
+  VerificationStatus status = 3;
+  repeated string verified_capabilities = 4;
+  int64 timestamp = 5;
+}
+
+message TransactionValidationEvent {
+  string event_id = 1;
+  string transaction_id = 2;
+  VerificationStatus status = 3;
+  repeated string validators = 4;
+  int64 timestamp = 5;
+}

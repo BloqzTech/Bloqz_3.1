@@ -1,0 +1,304 @@
+# IBC Protocol Configuration
+protocol:
+  version: "1.0"
+  timeout_height: 1000
+  timeout_timestamp: 1800 # 30 minutes in seconds
+
+# Connection Policies
+connection_policies:
+  - chain_id: "bloqz-finance-1"
+    paths:
+      - path_name: "finance-transfer"
+        port_id: "transfer"
+        version: "ics20-1"
+        ordering: "UNORDERED"
+        rules:
+          - rule: "allowlist"
+            tokens: ["ubloqz", "ufin"]
+      - path_name: "finance-verification"
+        port_id: "verification"
+        version: "ics27-1"
+        ordering: "ORDERED"
+        rules:
+          - rule: "allowlist"
+            data_types: ["profile", "document", "integration"]
+  - chain_id: "bloqz-healthcare-1"
+    paths:
+      - path_name: "healthcare-transfer"
+        port_id: "transfer"
+        version: "ics20-1"
+        ordering: "UNORDERED"
+        rules:
+          - rule: "allowlist"
+            tokens: ["ubloqz", "uhealth"]
+      - path_name: "healthcare-verification"
+        port_id: "verification"
+        version: "ics27-1"
+        ordering: "ORDERED"
+        rules:
+          - rule: "allowlist"
+            data_types: ["profile", "document", "integration"]
+  - chain_id: "bloqz-education-1"
+    paths:
+      - path_name: "education-communication"
+        port_id: "communication"
+        version: "ics30-1"
+        ordering: "ORDERED"
+        rules:
+          - rule: "allowlist"
+            message_types: ["profile", "document", "realtime"]
+  - chain_id: "bloqz-government-1"
+    paths:
+      - path_name: "government-verification"
+        port_id: "verification"
+        version: "ics27-1"
+        ordering: "ORDERED"
+        rules:
+          - rule: "allowlist"
+            data_types: ["identity", "document", "certification"]
+  - chain_id: "bloqz-retail-1"
+    paths:
+      - path_name: "retail-communication"
+        port_id: "communication"
+        version: "ics30-1"
+        ordering: "UNORDERED"
+        rules:
+          - rule: "allowlist"
+            message_types: ["transaction", "inventory", "customer"]
+
+# Message Types Configuration
+message_types:
+  user_communication:
+    - type: "direct_message"
+      version: "1.0"
+      validation: ["signature", "encryption"]
+    - type: "group_message"
+      version: "1.0"
+      validation: ["signature", "encryption", "group_policy"]
+    - type: "broadcast"
+      version: "1.0"
+      validation: ["signature", "rate_limit"]
+  
+  data_sharing:
+    - type: "document"
+      version: "1.0"
+      validation: ["hash", "encryption", "access_control"]
+    - type: "profile"
+      version: "1.0"
+      validation: ["signature", "encryption", "privacy_policy"]
+    - type: "metadata"
+      version: "1.0"
+      validation: ["signature", "schema_validation"]
+
+  transaction_validation:
+    - type: "cross_chain_tx"
+      version: "1.0"
+      validation: ["signature", "sequence", "timeout"]
+    - type: "atomic_swap"
+      version: "1.0"
+      validation: ["hash_timelock", "signature"]
+    - type: "batch_tx"
+      version: "1.0"
+      validation: ["merkle_proof", "signature"]
+
+  service_integration:
+    - type: "api_verification"
+      version: "1.0"
+      validation: ["signature", "rate_limit", "schema"]
+    - type: "webhook"
+      version: "1.0"
+      validation: ["signature", "retry_policy"]
+    - type: "event_subscription"
+      version: "1.0"
+      validation: ["signature", "filter_policy"]
+
+  device_authentication:
+    - type: "mobile_auth"
+      version: "1.0"
+      validation: ["signature", "device_id", "biometric"]
+    - type: "session_token"
+      version: "1.0"
+      validation: ["signature", "expiry", "scope"]
+    - type: "device_sync"
+      version: "1.0"
+      validation: ["signature", "encryption"]
+
+# Protocol Handlers Configuration
+protocol_handlers:
+  cross_chain_communication:
+    enabled: true
+    handlers:
+      - name: "industry_sync"
+        version: "1.0"
+        supported_chains: ["finance", "healthcare", "education", "government", "retail"]
+        message_types: ["transaction", "document", "profile"]
+      - name: "data_relay"
+        version: "1.0"
+        supported_chains: ["*"]
+        message_types: ["broadcast", "direct_message"]
+
+  user_profile_verification:
+    enabled: true
+    handlers:
+      - name: "identity_verification"
+        version: "1.0"
+        verification_levels: ["basic", "advanced", "government"]
+        required_proofs: ["signature", "document", "biometric"]
+      - name: "credential_sync"
+        version: "1.0"
+        credential_types: ["academic", "professional", "government"]
+
+  document_verification:
+    enabled: true
+    handlers:
+      - name: "document_validator"
+        version: "1.0"
+        supported_types: ["pdf", "image", "structured_data"]
+        validation_methods: ["hash", "signature", "timestamp"]
+      - name: "sharing_protocol"
+        version: "1.0"
+        sharing_modes: ["direct", "temporary", "controlled"]
+        access_control: ["role_based", "attribute_based"]
+
+  realtime_messaging:
+    enabled: true
+    handlers:
+      - name: "message_relay"
+        version: "1.0"
+        message_types: ["text", "media", "structured"]
+        delivery_guarantees: ["at_least_once", "exactly_once"]
+      - name: "presence_protocol"
+        version: "1.0"
+        features: ["status", "typing", "delivery_receipt"]
+
+  video_conferencing:
+    enabled: true
+    handlers:
+      - name: "signaling_protocol"
+        version: "1.0"
+        signal_types: ["offer", "answer", "ice_candidate"]
+        media_types: ["audio", "video", "screen"]
+      - name: "conference_control"
+        version: "1.0"
+        features: ["recording", "moderation", "quality_control"]
+
+  mobile_authentication:
+    enabled: true
+    handlers:
+      - name: "device_authenticator"
+        version: "1.0"
+        auth_methods: ["biometric", "pin", "pattern"]
+        security_levels: ["standard", "high_security"]
+      - name: "session_manager"
+        version: "1.0"
+        features: ["token_refresh", "multi_device", "revocation"]
+
+# Verification Data Transfer Configuration
+verification_transfer:
+  enabled: true
+  supported_types:
+    - type: "profile"
+      validation_rules:
+        - "signature_verification"
+        - "timestamp_check"
+        - "source_chain_validation"
+    - type: "document"
+      validation_rules:
+        - "hash_verification"
+        - "merkle_proof"
+        - "timestamp_check"
+    - type: "integration"
+      validation_rules:
+        - "service_verification"
+        - "api_health_check"
+        - "security_validation"
+  timeout: "60s"
+  retry_policy:
+    max_attempts: 3
+    backoff: "exponential"
+
+# Document Hash Sync Configuration
+document_sync:
+  enabled: true
+  sync_frequency: "600s"  # 10 minutes
+  batch_size: 100
+  merkle_tree:
+    enabled: true
+    max_tree_size: 10000
+  pruning:
+    enabled: true
+    keep_recent: 100
+    keep_every: 500
+    interval: "24h"
+
+# Packet Configuration
+packet_config:
+  max_packet_size: 10240 # bytes
+  timeout_height_offset: 1000
+  timeout_timestamp_offset: 3600 # 1 hour in seconds
+
+# Client Configuration
+client_config:
+  allowed_clients: ["07-tendermint"]
+  trusting_period: "336h"
+  unbonding_period: "504h"
+  max_clock_drift: "10s"
+
+# Relayer Configuration
+relayer:
+  enabled: true
+  mode: "active"
+  memo_prefix: "bloqz-relayer"
+  strategies:
+    - name: "naive"
+      config:
+        timeout: 60
+        max_retries: 3
+    - name: "symm"
+      config:
+        timeout: 120
+        max_retries: 5
+
+# Verification Middleware Configuration
+verification_middleware:
+  enabled: true
+  modules:
+    - name: "profile-verifier"
+      priority: 1
+      timeout: "30s"
+    - name: "document-verifier"
+      priority: 2
+      timeout: "45s"
+    - name: "integration-verifier"
+      priority: 3
+      timeout: "60s"
+  error_handling:
+    retry_enabled: true
+    max_retries: 3
+    backoff_multiplier: 2
+
+# Monitoring and Metrics
+metrics:
+  enabled: true
+  prometheus: true
+  grafana:
+    enabled: true
+    update_interval: 10
+  verification_metrics:
+    enabled: true
+    collect_interval: "60s"
+    retention_period: "720h"
+
+# Security Settings
+security:
+  min_validator_stake: "100000ubloqz"
+  slash_fraction_double_sign: "0.05"
+  slash_fraction_downtime: "0.01"
+  security_contact: "security@bloqz.io"
+  
+# Recovery Configuration
+recovery:
+  enabled: true
+  max_attempts: 5
+  backup_interval: "24h"
+  retention_period: "72h"

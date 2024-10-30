@@ -1,0 +1,190 @@
+# Hub Chain Configuration
+chain:
+  name: "bloqz-hub"
+  chain_id: "bloqz-hub-1"
+  version: 1
+  min_gas_price: "0.001ubloqz"
+
+# Genesis Configuration
+genesis:
+  genesis_time: "2024-01-01T00:00:00Z"
+  chain_id: "bloqz-hub-1"
+  initial_height: "1"
+  
+  # Consensus Parameters
+  consensus_params:
+    block:
+      max_bytes: "22020096"
+      max_gas: "-1"
+      time_iota_ms: "1000"
+    evidence:
+      max_age_num_blocks: "100000"
+      max_age_duration: "172800000000000"
+      max_bytes: "1048576"
+    validator:
+      pub_key_types: ["ed25519"]
+    version: {}
+
+# Validator Configuration
+validators:
+  min_self_delegation: "1"
+  min_commission_rate: "0.05"
+  max_commission_rate: "0.20"
+  max_commission_change_rate: "0.01"
+  blocks_per_year: "6311520"
+
+# Token Configuration
+token:
+  base_denom: "ubloqz"
+  display_denom: "BLOQZ"
+  decimals: 6
+  initial_supply: "1000000000000000"
+
+# Profile Verification Module
+profile_verification:
+  enabled: true
+  verification_levels:
+    - name: "basic"
+      requirements:
+        - "email"
+        - "phone"
+    - name: "advanced"
+      requirements:
+        - "government_id"
+        - "proof_of_address"
+    - name: "enterprise"
+      requirements:
+        - "business_registration"
+        - "tax_documents"
+  verification_timeout: "720h"  # 30 days
+  verification_providers:
+    - name: "internal"
+      weight: 1
+    - name: "third_party"
+      weight: 2
+
+# Document Hash Storage
+document_storage:
+  enabled: true
+  max_document_size: "10485760"  # 10MB
+  supported_hash_algorithms:
+    - "sha256"
+    - "sha512"
+  retention_period: "87600h"  # 10 years
+  indexing:
+    enabled: true
+    search_fields:
+      - "owner"
+      - "document_type"
+      - "creation_date"
+      - "industry"
+
+# Integration Service Verification
+integration_verification:
+  enabled: true
+  service_types:
+    - name: "api"
+      verification_method: "oauth2"
+    - name: "database"
+      verification_method: "certificate"
+    - name: "messaging"
+      verification_method: "api_key"
+  verification_frequency: "24h"
+  max_retry_attempts: 3
+  timeout: "30s"
+
+# IBC Configuration
+ibc:
+  enabled: true
+  transfer_enabled: true
+  transfer_port: "transfer"
+  commitment_prefix: "bloqz"
+  max_expected_time_per_block: "30000000000" # 30s in nanoseconds
+  
+  # IBC Client Configuration
+  client:
+    trusted_height: "1-1"
+    trusting_period: "336h"
+    unbonding_period: "504h"
+    max_clock_drift: "10s"
+    allow_update_after_expiry: true
+    allow_update_after_misbehaviour: true
+
+# Cross-Chain Transfer Settings
+cross_chain:
+  enabled: true
+  verification_data_transfer: true
+  document_hash_sync: true
+  channels:
+    ecommerce:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    finance:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    healthcare:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    government:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    insurance:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    realestate:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    retail:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    supplychain:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    telecom:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+    education:
+      port: "transfer"
+      version: "ics20-1"
+      verification_enabled: true
+
+# State Sync Configuration
+state_sync:
+  enabled: true
+  rpc_servers: []
+  trust_height: 0
+  trust_hash: ""
+  trust_period: "168h"
+
+# P2P Configuration
+p2p:
+  laddr: "tcp://0.0.0.0:26656"
+  external_address: ""
+  seeds: []
+  persistent_peers: []
+  max_num_inbound_peers: 40
+  max_num_outbound_peers: 10
+  allow_duplicate_ip: false
+
+# Security Settings
+security:
+  min_validator_stake: "100000ubloqz"
+  slash_fraction_double_sign: "0.05"
+  slash_fraction_downtime: "0.01"
+  security_contact: "security@bloqz.io"
+  
+# Recovery Configuration
+recovery:
+  enabled: true
+  max_attempts: 5
+  backup_interval: "24h"
+  retention_period: "72h"

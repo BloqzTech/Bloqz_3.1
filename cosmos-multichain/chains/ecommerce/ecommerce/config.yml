@@ -1,0 +1,40 @@
+version: 1
+validation: sovereign
+accounts: 
+- name: alice
+  coins:
+  - 20000token
+  - 200000000stake
+- name: bob
+  coins:
+  - 10000token
+  - 100000000stake
+client:
+  openapi:
+    path: docs/static/openapi.yml
+faucet:
+  name: bob
+  coins:
+  - 5token
+  - 100000stake
+validators:
+- name: alice
+  bonded: 100000000stake
+
+# IBC Configuration
+ibc:
+  enabled: true
+  transfer:
+    enabled: true
+  relayers:
+    - name: ecommerce-hub
+      chain_a:
+        chain_id: ecommerce
+        port_id: transfer
+        order: unordered
+        version: ics20-1
+      chain_b:
+        chain_id: hub
+        port_id: transfer
+        order: unordered
+        version: ics20-1

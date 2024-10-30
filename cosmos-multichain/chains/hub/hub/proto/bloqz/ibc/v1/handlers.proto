@@ -1,0 +1,102 @@
+syntax = "proto3";
+package bloqz.ibc.v1;
+
+import "bloqz/ibc/v1/types.proto";
+import "gogoproto/gogo.proto";
+import "cosmos/base/v1beta1/coin.proto";
+
+option go_package = "github.com/bloqz/hub/x/ibc/handlers";
+
+// Cross-chain communication service
+service CrossChainService {
+  // Profile verification
+  rpc VerifyUserProfile(VerifyUserProfileRequest) returns (VerifyUserProfileResponse);
+  
+  // Document verification
+  rpc VerifyDocument(VerifyDocumentRequest) returns (VerifyDocumentResponse);
+  
+  // Real-time messaging
+  rpc SendMessage(SendMessageRequest) returns (SendMessageResponse);
+  
+  // Video conferencing
+  rpc SignalVideo(VideoSignalRequest) returns (VideoSignalResponse);
+  
+  // Device authentication
+  rpc AuthenticateDevice(AuthenticateDeviceRequest) returns (AuthenticateDeviceResponse);
+  
+  // Service verification
+  rpc VerifyService(VerifyServiceRequest) returns (VerifyServiceResponse);
+}
+
+// Request/Response messages for each service
+
+message VerifyUserProfileRequest {
+  UserProfile profile = 1;
+  repeated string required_credentials = 2;
+}
+
+message VerifyUserProfileResponse {
+  VerificationStatus status = 1;
+  string verification_id = 2;
+  repeated string verified_credentials = 3;
+  string error_message = 4;
+}
+
+message VerifyDocumentRequest {
+  Document document = 1;
+  repeated string required_verifications = 2;
+}
+
+message VerifyDocumentResponse {
+  VerificationStatus status = 1;
+  string verification_id = 2;
+  repeated string completed_verifications = 3;
+  string error_message = 4;
+}
+
+message SendMessageRequest {
+  RealTimeMessage message = 1;
+  bool require_delivery_confirmation = 2;
+}
+
+message SendMessageResponse {
+  string message_id = 1;
+  repeated string delivered_to = 2;
+  repeated string failed_deliveries = 3;
+  string error_message = 4;
+}
+
+message VideoSignalRequest {
+  VideoSignal signal = 1;
+  bool require_acknowledgment = 2;
+}
+
+message VideoSignalResponse {
+  string signal_id = 1;
+  bool acknowledged = 2;
+  string error_message = 3;
+}
+
+message AuthenticateDeviceRequest {
+  DeviceAuth auth_data = 1;
+  repeated string required_factors = 2;
+}
+
+message AuthenticateDeviceResponse {
+  VerificationStatus status = 1;
+  string auth_token = 2;
+  int64 token_expiry = 3;
+  string error_message = 4;
+}
+
+message VerifyServiceRequest {
+  ServiceVerification service = 1;
+  repeated string required_capabilities = 2;
+}
+
+message VerifyServiceResponse {
+  VerificationStatus status = 1;
+  string verification_id = 2;
+  repeated string verified_capabilities = 3;
+  string error_message = 4;
+}
